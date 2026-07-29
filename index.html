@@ -29,7 +29,9 @@ a { color: #00998a; }
 input[type=text], input[type=email], input[type=url], select { width: 100%; height: 38px; padding: 0 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 7px; background: #fff; color: #1a1a1a; outline: none; }
 input:focus, select:focus { border-color: #00D0AD; }
 .two-col { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
-@media (max-width: 800px){ .two-col { grid-template-columns: 1fr; } }
+.builder-top { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+.col-output { margin-top: 1.75rem; }
+@media (max-width: 800px){ .two-col, .builder-top { grid-template-columns: 1fr; } }
 
 .btn { height: 40px; padding: 0 16px; border-radius: 7px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; font-family: inherit; }
 .btn-teal { background: #00D0AD; color: #fff; }
@@ -46,7 +48,7 @@ summary { cursor: pointer; padding: 11px 13px; font-size: 13px; color: #555; fon
 .route-row input { height: 32px; font-size: 13px; }
 
 /* article picker */
-.art-list { display: flex; flex-direction: column; gap: 4px; max-height: 340px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 6px; }
+.art-list { display: flex; flex-direction: column; gap: 4px; max-height: 520px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 6px; }
 .art-item { text-align: left; padding: 9px 11px; font-size: 13px; border: none; background: transparent; border-radius: 6px; cursor: pointer; color: #333; }
 .art-item:hover { background: #f7f7f7; }
 .art-item.active { background: #e0faf5; color: #00806f; font-weight: 500; }
@@ -118,7 +120,7 @@ summary { cursor: pointer; padding: 11px 13px; font-size: 13px; color: #555; fon
 
 <!-- ============ TAB 1 ============ -->
 <div class="panel active" id="p0">
-  <div class="two-col">
+  <div class="builder-top">
     <div>
       <div class="sec-label">Network Basics</div>
       <div class="frow">
@@ -156,11 +158,15 @@ summary { cursor: pointer; padding: 11px 13px; font-size: 13px; color: #555; fon
         <input type="url" id="mainSpaceUrl" placeholder="paste the link" oninput="render()">
       </div>
 
-      <div class="sec-label">Pick an Article</div>
-      <div class="art-list" id="artList"></div>
     </div>
 
     <div>
+      <div class="sec-label" style="margin-top:0">Pick an Article</div>
+      <div class="art-list" id="artList"></div>
+    </div>
+  </div>
+
+  <div class="col-output">
       <div class="card">
         <div class="card-head">
           <span class="lbl">Title</span>
@@ -178,7 +184,6 @@ summary { cursor: pointer; padding: 11px 13px; font-size: 13px; color: #555; fon
         </div>
         <div id="body"></div>
       </div>
-    </div>
   </div>
 </div>
 

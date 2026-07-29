@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mighty Pro Launch Toolkit</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Inter+Tight:wght@500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #1a1a1a; padding: 28px; max-width: 1000px; margin: 0 auto; }
+h1 { font-family: 'Inter Tight', sans-serif; font-size: 26px; font-weight: 600; color: #092B2E; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #aaa; margin-bottom: 1.5rem; }
+a { color: #00998a; }
+
+.step-nav { display: flex; border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; margin-bottom: 1.5rem; }
+.snav { flex: 1; padding: 12px 4px; font-size: 13px; color: #888; background: #f7f7f7; border: none; border-right: 1px solid #e5e5e5; cursor: pointer; text-align: center; }
+.snav:last-child { border-right: none; }
+.snav.active { background: #fff; color: #1a1a1a; font-weight: 500; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+.sec-label { font-family: 'Inter Tight', sans-serif; font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: .07em; margin: 1.25rem 0 10px; }
+.fl { font-size: 13px; color: #555; margin-bottom: 5px; display: block; }
+.hint { font-size: 12px; color: #aaa; margin-top: 3px; line-height: 1.4; }
+.frow { margin-bottom: .9rem; }
+input[type=text], input[type=email], input[type=url], select { width: 100%; height: 38px; padding: 0 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 7px; background: #fff; color: #1a1a1a; outline: none; }
+input:focus, select:focus { border-color: #00D0AD; }
+.two-col { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+@media (max-width: 800px){ .two-col { grid-template-columns: 1fr; } }
+
+.btn { height: 40px; padding: 0 16px; border-radius: 7px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; font-family: inherit; }
+.btn-teal { background: #00D0AD; color: #fff; }
+.btn-teal:hover { background: #00b89a; }
+.btn-ghost { background: #fff; border: 1px solid #ddd; color: #1a1a1a; }
+.btn-ghost:hover { background: #f7f7f7; }
+.btn-sm { height: 30px; padding: 0 11px; font-size: 12px; border-radius: 6px; }
+
+details { border: 1px solid #e5e5e5; border-radius: 8px; margin-bottom: 1rem; }
+summary { cursor: pointer; padding: 11px 13px; font-size: 13px; color: #555; font-weight: 500; }
+.route-body { padding: 0 13px 13px; }
+.route-row { display: grid; grid-template-columns: 130px 1fr; gap: 8px; align-items: center; margin-bottom: 7px; }
+.route-row label { font-size: 12px; color: #888; }
+.route-row input { height: 32px; font-size: 13px; }
+
+/* article picker */
+.art-list { display: flex; flex-direction: column; gap: 4px; max-height: 340px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 6px; }
+.art-item { text-align: left; padding: 9px 11px; font-size: 13px; border: none; background: transparent; border-radius: 6px; cursor: pointer; color: #333; }
+.art-item:hover { background: #f7f7f7; }
+.art-item.active { background: #e0faf5; color: #00806f; font-weight: 500; }
+
+/* output */
+.card { border: 1px solid #e5e5e5; border-radius: 10px; margin-bottom: 1rem; }
+.card-head { display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f0f0f0; background: #fafafa; border-radius: 10px 10px 0 0; }
+.card-head .lbl { flex: 1; font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .05em; font-family: 'Inter Tight', sans-serif; }
+.title-line { padding: 12px 14px; font-family: 'Inter Tight', sans-serif; font-size: 18px; color: #092B2E; }
+#body { padding: 18px 20px; font-size: 15px; line-height: 1.6; color: #1a1a1a; max-height: 560px; overflow-y: auto; }
+#body h3 { font-family: 'Inter Tight', sans-serif; font-size: 15px; color: #092B2E; margin: 1rem 0 .35rem; }
+#body p { margin-bottom: .7rem; }
+#body ol, #body ul { margin: 0 0 .8rem 1.3rem; }
+#body li { margin-bottom: .25rem; }
+#body a { color: #00998a; }
+#body a.needs-link { background: #fff3cd; color: #8a6d00; padding: 0 3px; border-radius: 3px; text-decoration: underline dotted; }
+.img-block { border: 1px dashed #d5d5d5; border-radius: 8px; padding: 12px; margin: .8rem 0; background: #fafafa; }
+.img-block img { max-width: 240px; width: 100%; border-radius: 6px; display: block; margin-bottom: 8px; }
+.img-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.pill.generic { background: #e0faf5; color: #00806f; }
+.pill.network { background: #fde8d0; color: #9a5a00; }
+.img-note { font-size: 12px; color: #999; margin-top: 6px; line-height: 1.4; }
+.manual-links { font-size: 12.5px; color: #8a6d00; background: #fffbe9; border: 1px solid #f2e3a8; border-radius: 8px; padding: 10px 12px; margin-bottom: 1rem; line-height: 1.5; }
+.manual-links b { color: #7a5f00; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #092B2E; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* image generator */
+.color-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.color-row input[type=color] { width: 52px; height: 38px; padding: 2px; border: 1px solid #ddd; border-radius: 7px; background: #fff; cursor: pointer; flex-shrink: 0; }
+.color-row input[type=text] { flex: 1; }
+.preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+.preset { width: 46px; height: 30px; border-radius: 6px; border: 1px solid #e5e5e5; cursor: pointer; }
+.img-grid { display: grid; gap: 14px; margin-bottom: 1.75rem; }
+.img-grid.square { grid-template-columns: repeat(3, 1fr); }
+.img-grid.wide { grid-template-columns: repeat(2, 1fr); }
+.palette-strip { display: flex; height: 48px; border-radius: 8px; overflow: hidden; border: 1px solid #eee; margin-bottom: 12px; }
+.palette-strip .cell { flex: 1; }
+.swatch-actions { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.swatch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.swatch-card { border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
+.swatch-chip { height: 88px; }
+.swatch-body { padding: 8px; display: flex; flex-direction: column; gap: 7px; align-items: center; }
+.swatch-hex { font-size: 12px; color: #888; font-family: ui-monospace, Menlo, monospace; }
+.swatch-btns { display: flex; gap: 6px; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom: 16px;">
+  <svg width="90" height="27" viewBox="0 0 269 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 62.0305H13.7941V40.1138C13.7941 32.0717 16.7693 29.6856 21.187 29.6856C25.4244 29.6856 27.5882 32.0717 27.5882 37.9928V62.0305H41.4725V40.1138C41.4725 32.0717 44.4477 29.6856 48.7753 29.6856C53.0127 29.6856 55.2665 32.1601 55.2665 38.0812V62.0305H69.1508V35.6067C69.1508 26.6809 66.1757 18.2854 53.7339 18.2854C47.3328 18.2854 42.1937 21.5552 39.8497 26.1507C37.9563 21.6436 33.9894 18.2854 26.2359 18.2854C20.1953 18.2854 15.6874 21.3785 13.7941 25.6204V19.4343H0V62.0305Z" fill="#092B2E"/>
+    <path d="M81.5569 16.5259C86.5156 16.5259 90.1219 12.8142 90.1219 8.30716C90.1219 3.71171 86.5156 0 81.5569 0C76.5982 0 73.0821 3.71171 73.0821 8.30716C73.0821 12.8142 76.5982 16.5259 81.5569 16.5259ZM74.705 62.0305H88.4089V21.041H74.705V62.0305Z" fill="#092B2E"/>
+    <path d="M126.892 19.4343V25.5321C124.728 21.1134 119.409 18.2854 113.459 18.2854C100.927 18.2854 92.6321 27.7414 92.6321 40.2905C92.6321 52.8396 100.386 62.0305 113.278 62.0305C118.958 62.0305 124.728 59.3793 126.892 55.1374V60.7933C126.892 68.3935 123.015 71.1331 116.614 71.1331C111.024 71.1331 108.049 69.1005 107.418 65.7422H93.3533C93.5337 70.3377 96.6892 74.9332 101.107 77.5844C105.344 80.0588 110.573 81.0309 116.794 81.0309C123.015 81.0309 128.334 79.9705 132.301 77.2309C137.621 73.6075 140.596 67.5097 140.686 59.2909V19.4343H126.892ZM117.065 51.6024C110.844 51.6024 106.787 46.9186 106.787 40.4673C106.787 34.016 110.844 29.3321 117.065 29.3321C123.646 29.3321 127.523 34.2811 127.523 40.4673C127.523 46.6535 123.646 51.6024 117.065 51.6024Z" fill="#092B2E"/>
+    <path d="M174.169 18.2854C167.588 18.2854 162.629 20.8482 160.105 25.6204V0.168712H146.311V62.0305H160.105V39.7603C160.105 33.2206 162.99 29.6856 168.489 29.6856C174.079 29.6856 176.153 32.9555 176.153 40.1138V62.0305H190.037V35.6951C190.037 24.1181 184.718 18.2854 174.169 18.2854Z" fill="#092B2E"/>
+    <path d="M215.465 51.514C212.039 51.514 209.424 50.5419 209.424 44.2674V30.1275H220.243V19.4343H209.424V6.79677H195.63V47.0953C195.63 61.3235 204.556 62.7375 211.047 62.7375C215.998 62.7375 221.473 61.428 224.546 60.4559C224.546 60.4559 222.935 57.4431 222.32 55.8363C221.706 54.2295 220.858 51.2168 220.858 51.2168C219.596 51.3935 216.997 51.514 215.465 51.514Z" fill="#092B2E"/>
+    <path d="M255.097 19.4343V40.5556C255.097 47.0953 252.302 51.3373 246.712 51.3373C240.942 51.3373 239.049 47.6256 239.049 42.1464V19.4343H225.255V44.179C225.255 54.7839 230.213 62.0305 241.303 62.0305C247.884 62.0305 252.663 59.4677 255.097 54.9606V61.5887C255.097 68.2167 251.761 71.1331 246.712 71.1331C241.483 71.1331 239.41 69.0121 239.139 65.3887H225.255C225.345 69.9842 227.509 73.961 230.664 76.6123C234.271 79.5286 239.319 81.0309 246.712 81.0309C254.015 81.0309 258.793 79.3518 262.67 76.082C266.367 72.8122 268.891 67.5981 268.891 60.7049V19.4343H255.097Z" fill="#092B2E"/>
+  </svg>
+</div>
+<h1>Launch Toolkit</h1>
+<p class="subtitle">Generate ready-to-paste FAQ articles and branded starter images for a new Mighty Network</p>
+
+<div class="step-nav">
+  <button class="snav active" onclick="showTab(0)" id="tab0">📄 FAQ Article Builder</button>
+  <button class="snav" onclick="showTab(1)" id="tab1">🎨 Brand Images</button>
+</div>
+
+<!-- ============ TAB 1 ============ -->
+<div class="panel active" id="p0">
+  <div class="two-col">
+    <div>
+      <div class="sec-label">Network Basics</div>
+      <div class="frow">
+        <label class="fl">Network Web Address (Root URL)</label>
+        <input type="url" id="rootUrl" placeholder="https://yournetwork.mn.co" oninput="render()">
+        <div class="hint">Every system link is rebuilt from this.</div>
+      </div>
+      <div class="frow">
+        <label class="fl">Host Support Email</label>
+        <input type="email" id="supportEmail" placeholder="hello@yournetwork.com" oninput="render()">
+      </div>
+
+      <div class="sec-label">App Store Listings</div>
+      <div class="frow">
+        <label class="fl">Apple App Store URL</label>
+        <input type="url" id="iosUrl" placeholder="https://apps.apple.com/..." oninput="render()">
+      </div>
+      <div class="frow">
+        <label class="fl">Google Play URL</label>
+        <input type="url" id="androidUrl" placeholder="https://play.google.com/..." oninput="render()">
+      </div>
+
+      <div class="sec-label">Per-Network Space Links</div>
+      <div class="hint" style="margin-bottom:10px">Paste each once — used wherever an article links to that Space.</div>
+      <div class="frow">
+        <label class="fl">Community Guidelines Link</label>
+        <input type="url" id="guidelinesUrl" placeholder="paste the link" oninput="render()">
+      </div>
+      <div class="frow">
+        <label class="fl">Events Space Link</label>
+        <input type="url" id="eventsUrl" placeholder="paste the link" oninput="render()">
+      </div>
+      <div class="frow">
+        <label class="fl">Main Community Feed Link</label>
+        <input type="url" id="mainSpaceUrl" placeholder="paste the link" oninput="render()">
+      </div>
+
+      <div class="sec-label">Pick an Article</div>
+      <div class="art-list" id="artList"></div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-head">
+          <span class="lbl">Title</span>
+          <button class="btn btn-ghost btn-sm" onclick="copyTitle()">📋 Copy title</button>
+        </div>
+        <div class="title-line" id="title"></div>
+      </div>
+
+      <div id="manualLinks"></div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="lbl">Body</span>
+          <button class="btn btn-ghost btn-sm" onclick="copyBody()">📋 Copy body (keeps formatting)</button>
+        </div>
+        <div id="body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 2 ============ -->
+<div class="panel" id="p1">
+  <div class="two-col">
+    <div>
+      <div class="sec-label">Brand Colors</div>
+      <div class="hint" style="margin-bottom:10px">No hex code? Click the color square to pick a color — the hex fills in automatically.</div>
+      <div class="color-row"><input type="color" id="c1" value="#00D0AD" oninput="syncColor(1,'picker')"><input type="text" id="c1t" value="#00D0AD" oninput="syncColor(1,'text')"></div>
+      <div class="color-row"><input type="color" id="c2" value="#092B2E" oninput="syncColor(2,'picker')"><input type="text" id="c2t" value="#092B2E" oninput="syncColor(2,'text')"></div>
+      <div class="color-row"><input type="color" id="c3" value="#0A6E7C" oninput="syncColor(3,'picker')"><input type="text" id="c3t" value="#0A6E7C" oninput="syncColor(3,'text')"></div>
+      <div class="hint" style="margin-bottom:14px">These anchor the palette. Colors blend evenly between them, so pick 2–3 that live in the same world.</div>
+      <div class="sec-label">Quick Presets</div>
+      <div class="preset-row" id="presetRow"></div>
+      <div class="frow" style="margin-top:1rem">
+        <label class="fl">Number of Colors</label>
+        <input type="number" id="numColors" value="6" min="2" max="12" oninput="generateImages()">
+      </div>
+      <button class="btn btn-teal" style="width:100%" onclick="generateImages()">Generate Palette</button>
+      <div class="hint" style="margin-top:10px">Flat solid colors that coordinate as Collection and Space icons down the left nav. Grab each as a 500×500 Space icon or a 16:9 thumbnail — no gradients, no text.</div>
+    </div>
+    <div>
+      <div class="sec-label">Your Palette</div>
+      <div class="palette-strip" id="paletteStrip"></div>
+      <div class="swatch-actions">
+        <button class="btn btn-ghost btn-sm" onclick="downloadAll('square')">⬇ All Squares (500×500)</button>
+        <button class="btn btn-ghost btn-sm" onclick="downloadAll('wide')">⬇ All Wide (16:9)</button>
+      </div>
+      <div class="swatch-grid" id="swatchGrid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   ARTICLE LIBRARY
+   Source of truth = the real "How Tos & FAQs" space in the
+   Humor & Humanity in Medicine (glaucomflecken) network.
+   Bodies keep the exact links Audra authored; the origin
+   network domain is swapped out at render time.
+   ============================================================ */
+const ORIGIN = 'glaucomflecken.mn.co';   // domain we genericize away
+
+const ARTICLES = [
+{
+  key:'download-app', title:'How to Download the App',
+  body:`<p>We're excited to offer the entire experience here in our <a href="https://glaucomflecken.mn.co/download-app">dedicated mobile apps</a> <em>and</em> on the web.</p><p>You can do everything here – posting, commenting, messaging, watching videos, and attending events – across all platforms.</p><p>To access our community experience on the web (from your laptop or computer), just visit: <a href="http://glaucomflecken.mn.co"><strong>glaucomflecken.mn.co</strong></a></p><p>To download the app to your iPhone or iPad, <a href="https://glaucomflecken.mn.co/download-app">use the QR code on this page</a> or go directly to the <a href="https://apps.apple.com/us/app/glaucomfleckens/id6762481144">Apple App Store</a> or the <a href="https://play.google.com/store/apps/details?id=com.mightybell.glaucomflecken">Google Play Store</a>.</p><p>We recommend turning on notifications within the app to ensure you're getting timely reminders about events, announcements, and more.</p>{{IMG0}}`,
+  images:[{placeholder:true, name:'app promo graphic', scope:'network', linkTo:'/download-app'}]
+},
+{
+  key:'profile', title:'How to Fill Out Your Profile',
+  body:`<p>When you're logged in on the web, you can click on your profile icon in the upper right corner to view your profile and then <a href="https://glaucomflecken.mn.co/your-settings/profile">edit your profile</a>.</p>{{IMG0}}<p>When you're using the <a href="https://glaucomflecken.mn.co/download-app">iOS or Android app</a>, you can tap on your profile icon along the bottom of the app to also edit or adjust your profile anytime.</p><p>You'll see options to add a profile photo, share more about yourself, and confirm your location.</p><p>We encourage you to share as much about yourself as you're comfortable, as this will enable us to instantly connect you with other members who share similar interests, or who are in the same location!</p>`,
+  images:[{src:'images/account-menu.png', name:'account-menu.png', scope:'generic'}]
+},
+{
+  key:'notifications', title:'How to Adjust Your Notifications',
+  body:`<p>As you engage with other members here, you'll automatically get notifications based on actions you take—such as commenting on a post, sending someone a message, or sharing a new question.</p><p>By default, you'll be notified when something new happens that's relevant to you: a new private message comes in, a comment is made on a post or question you've added, or other people have also commented on the same thread. Occasionally, someone from our team might also let you know about a new poll or question, resource, event announcement, or livestream.</p><h3><strong>You always control which notifications you get and how you get them.</strong></h3><p>To change your settings anytime, just go to <a href="https://glaucomflecken.mn.co/your-settings/notifications">Your Profile &gt; Personal Settings &gt; Notifications</a> when you're on the web or <a href="https://glaucomflecken.mn.co/download-app">in our app</a>.</p><p>You can also choose if you want to only receive notifications via email or only get push notifications via the app. Or, you can get both!</p>{{IMG0}}<h3><strong>Enabling or Disabling Sound Notifications</strong></h3><p>When you're logged in on the web, you may also notice that sound notifications are enabled by default when you receive a new notification that's relevant to you or a new private chat message. You can adjust these sound notifications anytime and set your preferences by going to <a href="https://glaucomflecken.mn.co/your-settings/appearance-and-sounds">Your Profile &gt; Personal Settings &gt; Appearance and Sounds</a>.</p><h3><strong>Five Ways You Can See Your Notifications</strong></h3><p>You decide how and when you receive notifications. Here are the five different ways you can see and receive notifications in our community:</p><p><strong>1. In-app notifications:</strong> By default, you will see all of your notifications when you log in by clicking on the bell icon. You'll see the bell icon along the top in the upper right corner when you're logged in on the web, or along the bottom when you're logged in via <a href="https://glaucomflecken.mn.co/download-app">the mobile app</a>.</p><p><strong>2. Email notifications:</strong> By default, you'll start receiving a daily digest via email of all notifications that are relevant to you after you join. You can choose to <a href="https://glaucomflecken.mn.co/your-settings/notifications">switch these email notifications</a> to come in as soon as they happen, or continue receiving the daily collection of your personal notifications in one email.</p><p><strong>3. Mobile push notifications:</strong> Once you <a href="https://glaucomflecken.mn.co/download-app">download the app on iOS or Android</a>, you'll have the option to also receive notifications directly to your phone via the app. These are called mobile push notifications, and we recommend turning these on as the best way to keep up with our community discussions and announcements.</p><p><strong>4. Desktop computer notifications:</strong> These are not on by default, but can be enabled by <a href="https://glaucomflecken.mn.co/your-settings/notifications">following the instructions here</a>. Desktop notifications will create a popup message in your web browser each time a notification is received and your tab is not in focus.</p><p><strong>5. Pop-up notifications:</strong> These notifications will appear temporarily in the lower right corner of the screen, and will only come through when you receive a private chat message from another member.</p>`,
+  images:[{src:'images/notifications.png', name:'notifications.png', scope:'generic', linkTo:'/your-settings/notifications'}]
+},
+{
+  key:'connect', title:'How to Connect With Other Members',
+  body:`<p>You have the ability here to <a href="https://glaucomflecken.mn.co/members">connect 1:1 with other members</a>. We encourage you to reach out to someone if you want to further a conversation or connect because you live in the same location or share a similar interest. Please consider <a href="https://glaucomflecken.mn.co/spaces/23135603/page">our community guidelines</a> when you reach out to someone, and lead with kindness and curiosity.</p><p>If you want to start a private messaging thread with someone, simply navigate to their profile and select the option to Chat.</p>{{IMG0}}<p>This will open up a messaging thread where you can send private, direct messages. You can always access and view your messages with other members from the chat icon that appears on the web in the top bar, or <a href="https://glaucomflecken.mn.co/download-app">in the app</a> along the bottom.</p><p>If you want to start a private small group chat thread with more than just one other person, you can select to "Start a Chat" from the same chat icon and select the people you want to message with. Our platform supports private group messaging for up to 9 people.</p><p><a href="https://glaucomflecken.mn.co/posts/how-tos-faqs-how-to-turn-off-the-ability-for-someone-to-message-you">Learn more here about how to turn off the ability for other members to message you.</a></p>`,
+  images:[{src:'images/member-profile.png', name:'member-profile.png', scope:'generic'}]
+},
+{
+  key:'create-posts', title:'How to Create Posts and Ask Questions',
+  body:`<p>We encourage you to ask questions, celebrate wins, and connect with other members here.</p><h3><strong>How to Add a Post or Ask a Question</strong></h3><p>In <a href="https://glaucomflecken.mn.co/spaces/23135621/feed">your community's main space</a>, you'll see a <strong>Create </strong>button right at the top when logged in on the web. Within <a href="https://glaucomflecken.mn.co/download-app">the app</a>, you'll see a pencil icon along the bottom.</p>{{IMG0}}<p>You'll then have the option of creating one of these two post types:</p><p><strong>Post: </strong>This type of post is ideal if you're sharing a short update and you want to include a single link to an external resource or website, attach photos, or upload a video.</p><p><strong>Question or Poll:</strong> If you have a short question you want to ask or you're looking to poll fellow members here to see how they are approaching a specific topic, creating a Question or Poll is ideal! You'll see options to ask a simple question or make your question a poll once you select "Question or Poll" from the + Create button. Your poll can be a Multiple Choice Poll with up to five answers, a Hot/Cold poll, or a Percentage Poll.</p><h3><strong>How to Add a Comment</strong></h3><p>You may also see the option to add a comment on any post or event here in our community. Comments can be threaded if you want to reply directly to someone's comment.</p><p>You can add a comment by clicking into the input box that appears under a post, or by selecting the chat bubble icon on a post!</p>`,
+  images:[{src:'images/create-post.png', name:'create-post.png', scope:'generic'}]
+},
+{
+  key:'events', title:'How to Attend Live Sessions and Sync Events to Your Calendar',
+  body:`<p>In our <a href="https://glaucomflecken.mn.co/spaces/23136487/content">events space</a>, you see upcoming scheduled events with your host and special guests.</p><p>You can tap or click on an individual event to see more details, including where it'll take place, if we have a special guest, and what you can expect to get from attending. You'll also see a prompt to RSVP for the event, along with a link to join the event.</p><p>When you RSVP "Going" or "Maybe," you'll automatically receive a reminder notification 10 minutes before the event is slated to begin, either via email or push notification from the app (<a href="https://glaucomflecken.mn.co/your-settings/notifications">depending on your settings</a>).</p><h3><strong>How to Sync Events to Your Calendar</strong></h3><p>Within the calendar view that's available in the web view along the right side, there's an option to automatically sync all upcoming events to your personal Google Calendar, Outlook Calendar, or Apple Calendar.</p><p>You can choose to sync only events you've RSVP'd to, or you can sync all upcoming events.</p><ol><li>Click on the "expand" icon within the calendar view along the right side of the page—this will open up a full page view of the calendar.</li><li>Click on the gear icon in the upper right corner of the expanded calendar to open up the options for syncing events with your personal calendar.</li><li>Once you've selected Sync to My Calendar, you'll see the options pop up for how you want to sync events.</li><li>From there, choose if you want to sync only events you've RSVP'd to or all events listed in the calendar. Then, select the calendar service you want to use.</li></ol>{{IMG0}}{{IMG1}}<p>To sync Events to your Apple or Outlook calendar, you'll need to follow the instructions to copy a specific calendar link and add it to your calendar app.</p><p>For syncing to Google Calendar, just add the calendar that pops up when you click on that option. Then, you'll be subscribed to this additional calendar that can display alongside your personal or work calendar of events in Google.</p><p>In all cases, when there are updates or changes made to events, the updates will automatically sync to your personal calendar. This includes deleted/removed events.</p><p>Automatic sync may take a few days to update, and depends on the settings you have in your Apple or Outlook calendar. You can manually sync your calendar at any time by repeating the calendar sync instructions above so that your synced calendar reflects your up-to-date changes.</p><h3><strong>Syncing Individual Events</strong></h3><p>On the individual post for each event, there's also an option to only add one individual event to your personal calendar.</p><p>Just click on the option you see to<strong> Add to Calendar</strong> on each event post, and you'll see a popup with options to export the information for just that event!</p>`,
+  images:[
+    {src:'images/events-calendar-menu.png', name:'events-calendar-menu.png', scope:'generic'},
+    {src:'images/events-sync-modal.png', name:'events-sync-modal.png', scope:'generic'}
+  ]
+},
+{
+  key:'bookmark', title:'How to Bookmark or Save Content',
+  body:`<p>If you see a post or piece of content that you want to save for reference later, simply tap or click on the bookmark icon you see on a post. Or, you can select the 3 dot menu for that post and select the option to Bookmark.</p><p>To find your bookmarked posts later, simply navigate to <a href="https://glaucomflecken.mn.co/bookmarks">Your Profile &gt; Bookmarks</a> to see all of the posts you've saved.</p>{{IMG0}}`,
+  images:[{src:'images/account-menu.png', name:'account-menu.png', scope:'generic'}]
+},
+{
+  key:'turn-off-messaging', title:'How to Turn Off the Ability for Someone to Message You',
+  body:`<p>If you don't want to receive private messages from other members, you can choose to turn off the ability for other members to message you. Please note that disabling this option will also prevent you from being able to send private messages to other members.</p><p>To adjust your preferences for receiving private messages, just navigate to <a href="https://glaucomflecken.mn.co/your-settings/chat">Your Account &gt; Personal Settings &gt; Chat</a>.</p><p>From here, you can toggle to "Off" to turn off the ability for you to receive or send private messages.</p>{{IMG0}}<p>If you ever want to change this setting in the future, just come back to the same place and toggle your personal settings for Chat to "On."</p>`,
+  images:[{src:'images/private-chat.png', name:'private-chat.png', scope:'generic'}]
+},
+{
+  key:'report-member', title:'How to Report a Member or Flag Content for a Host to Review',
+  body:`<p>As shared in <a href="https://glaucomflecken.mn.co/spaces/23135603/page">our Community Guidelines</a>, our hope is that this community is a safe space for us all to connect.</p><p>Our team will remove posts or comments that do not align with the <a href="https://glaucomflecken.mn.co/spaces/23135603/page">principles shared here</a>, and members will be permanently removed if they continually violate these principles.</p><p>We also encourage you to help us make sure this community stays strong and valuable for everyone!</p><p>If you do experience someone posting or sharing content that does not align with the guidelines linked above, please <strong>use the 3 dot menu on a post or on member's profile to quietly report them to our team</strong>.</p><p>You can also reach out to <a href="https://glaucomflecken.mn.co/members/hosts">one of our Hosts</a> and our team will assist.</p>`,
+  images:[]
+},
+{
+  key:'get-support', title:'How to Get Support',
+  body:`<p>Our platform partner is here to support you if you have technical issues or questions related to logging in or using the app. Please send a note directly to <a href="mailto:help@mightynetworks.com">help@mightynetworks.com</a> if you are seeking assistance with something technical.</p><p data-if="supportEmail">For all other questions, reach out to <a href="mailto:hello@glaucomflecken.com">hello@glaucomflecken.com</a> and our team can assist.</p>`,
+  images:[]
+},
+{
+  key:'billing-info', title:'How to Update Your Billing Information',
+  body:`<p>You can update your billing information when you're logged in on the web at <a href="https://glaucomflecken.mn.co/">glaucomflecken.mn.co.</a></p><p>Just click on your profile icon in the upper right corner, then navigate to <a href="https://glaucomflecken.mn.co/your-access">Plans and Access</a>.</p><p>Then, click on your active subscription. On the next page, you'll see a button to Manage Billing information. Click on "Edit Card" or "Replace Card" to change your billing information.</p>`,
+  images:[]
+},
+{
+  key:'billing-frequency', title:'How to Switch from Monthly to Annual Billing (or vice versa)',
+  body:`<p>Follow these steps:</p><ol><li>Make sure you're logged in on the web at <a href="https://glaucomflecken.mn.co/">glaucomflecken.mn.co</a>, then click on your profile icon in the upper right corner and navigate to <a href="https://glaucomflecken.mn.co/your-access">Plans and Access</a></li><li>Select your active subscription</li><li>Below your Plan Details, you'll see a button with an option to either "Switch to Annual Subscription" (if you're currently monthly) or "Switch to Monthly Subscription"</li></ol><p>The switch will take effect on your next billing date, and you'll be billed for the new subscription interval then.</p>`,
+  images:[]
+},
+{
+  key:'invoice', title:'How to Download an Invoice or Receipt',
+  body:`<p>You can download an invoice or receipt by navigating to your profile icon (in the upper right corner when you're logged in on the web, or along the bottom when you're logged into <a href="https://glaucomflecken.mn.co/download-app">the app</a>), then selecting <a href="https://glaucomflecken.mn.co/your-access">Plans and Access</a>.</p><p>From there, select your active subscription. On the next page, scroll down until you see the list of invoices. Select the date of the invoice you want to view, and click to "View Invoice."</p>`,
+  images:[]
+},
+{
+  key:'cancel', title:'How to Cancel Your Subscription',
+  body:`<p>Log in on the web at <a href="http://glaucomflecken.mn.co">glaucomflecken.mn.co</a>, then:</p><ol><li>Navigate to your profile, then to <a href="https://glaucomflecken.mn.co/your-access">Plans and Access</a></li><li>Select your active subscription</li><li>Below your Plan Details, you'll see a button with an option to "Cancel Subscription"</li></ol>`,
+  images:[]
+}
+];
+
+/* ---------------- Tabs / toast ---------------- */
+function showTab(i){
+  document.querySelectorAll('.panel').forEach((p,idx)=>p.classList.toggle('active',idx===i));
+  document.querySelectorAll('.snav').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+}
+let toastT;
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1900); }
+
+/* ---------------- helpers ---------------- */
+function val(id){ return document.getElementById(id).value.trim(); }
+function stripSlash(u){ return u.replace(/\/+$/,''); }
+let current = ARTICLES[0];
+
+function buildArtList(){
+  const w=document.getElementById('artList'); w.innerHTML='';
+  ARTICLES.forEach(a=>{
+    const b=document.createElement('button');
+    b.className='art-item'+(a.key===current.key?' active':'');
+    b.textContent=a.title;
+    b.onclick=()=>{ current=a; buildArtList(); render(); };
+    w.appendChild(b);
+  });
+}
+
+/* swap the origin network's domain / app-store / space / email links for this network's */
+function genericize(html){
+  const root = stripSlash(val('rootUrl'));
+  const rootFull = root || 'https://YOUR-NETWORK';
+  const domain = (root.replace(/^https?:\/\//,'')) || 'your-network.mn.co';
+  const ios = val('iosUrl'), and = val('androidUrl');
+  const guide = val('guidelinesUrl'), events = val('eventsUrl'), main = val('mainSpaceUrl'), email = val('supportEmail');
+  let out = html;
+  // 1. per-network specifics (full original URLs) before the domain swap.
+  //    App stores fall back to the Download the App page when not yet live.
+  const downloadPage = rootFull + '/download-app';
+  out = out.replace('https://apps.apple.com/us/app/glaucomfleckens/id6762481144', ios || downloadPage);
+  out = out.replace('https://play.google.com/store/apps/details?id=com.mightybell.glaucomflecken', and || downloadPage);
+  out = out.replaceAll('https://'+ORIGIN+'/spaces/23135603/page', guide || 'PASTE_COMMUNITY_GUIDELINES_LINK');
+  out = out.replaceAll('https://'+ORIGIN+'/spaces/23136487/content', events || 'PASTE_EVENTS_SPACE_LINK');
+  out = out.replaceAll('https://'+ORIGIN+'/spaces/23135621/feed', main || 'PASTE_MAIN_SPACE_LINK');
+  out = out.replaceAll('hello@glaucomflecken.com', email || 'PASTE_SUPPORT_EMAIL');
+  // 2. everything else = root + fixed path, plus plain-text domain mentions
+  out = out
+    .replaceAll('https://'+ORIGIN, rootFull)
+    .replaceAll('http://'+ORIGIN, rootFull)
+    .replaceAll(ORIGIN, domain);
+  return out;
+}
+
+function render(){
+  document.getElementById('title').textContent = current.title;
+
+  // 1. genericize body text/links, then insert image blocks at markers
+  let html = genericize(current.body);
+  (current.images||[]).forEach((im,i)=>{
+    html = html.replace('{{IMG'+i+'}}', imgBlockHtml(im,i));
+  });
+  const body=document.getElementById('body');
+  body.innerHTML = html;
+
+  // 1b. drop optional sentences whose input wasn't provided
+  body.querySelectorAll('[data-if]').forEach(el=>{ if(!val(el.getAttribute('data-if'))) el.remove(); });
+
+  // 2. flag links that must be set by hand (unique space IDs, sibling articles, empty app-store)
+  const manual=[];
+  body.querySelectorAll('a').forEach(a=>{
+    const h=a.getAttribute('href')||'';
+    if(/\/posts\//.test(h) || h.includes('PASTE_')){
+      a.classList.add('needs-link');
+      manual.push(a.textContent.trim());
+    }
+  });
+  const ml=document.getElementById('manualLinks');
+  if(manual.length){
+    ml.innerHTML='<div class="manual-links">⚠️ <b>'+manual.length+' link'+(manual.length>1?'s':'')+' to set by hand</b> after pasting (they point to Spaces or articles unique to each Network): '+manual.map(t=>'“'+t+'”').join(', ')+'</div>';
+  } else ml.innerHTML='';
+}
+
+function imgBlockHtml(im,i){
+  const linkNote = im.linkTo ? '<div class="img-note">🔗 In Mighty, link this image to <code>'+ (stripSlash(val('rootUrl'))||'{root}') + im.linkTo +'</code></div>' : '';
+  if(im.placeholder){
+    return '<div class="img-block">'
+      + '<div class="img-meta"><span class="pill network">Network-specific</span><span class="hint">'+im.name+'</span></div>'
+      + '<div class="img-note">🖼️ Add this Network\'s own '+im.name+' here — the design team\'s version, or make a quick one in the Brand Images tab.</div>'
+      + linkNote
+      + '</div>';
+  }
+  const pill = im.scope==='network'
+    ? '<span class="pill network">Network-specific — swap this one</span>'
+    : '<span class="pill generic">reusable — same on every Network</span>';
+  return '<div class="img-block">'
+    + '<img src="'+im.src+'" alt="'+im.name+'">'
+    + '<div class="img-meta">'+pill
+    + '<button class="btn btn-ghost btn-sm" onclick="downloadImg(\''+im.src+'\',\''+im.name+'\')">⬇ Download full-size</button>'
+    + '<span class="hint">'+im.name+'</span></div>'
+    + linkNote
+    + '<div class="img-note">🖼️ Upload this image here in the article.</div>'
+    + '</div>';
+}
+
+/* ---------------- copy ---------------- */
+function copyTitle(){
+  navigator.clipboard.writeText(current.title).then(()=>toast('Title copied ✓'));
+}
+function bodyForCopy(){
+  const src=document.getElementById('body').cloneNode(true);
+  // replace image tool-blocks with a clear upload placeholder at the same spot
+  src.querySelectorAll('.img-block').forEach(blk=>{
+    const img=blk.querySelector('img');
+    const nameSpan=blk.querySelector('.img-meta .hint');
+    const name=nameSpan?nameSpan.textContent:'image';
+    const p=document.createElement('p');
+    p.innerHTML='<em>[ 🖼️ upload image here: '+name+' ]</em>';
+    blk.replaceWith(p);
+  });
+  src.querySelectorAll('a').forEach(a=>a.classList.remove('needs-link'));
+  return src.innerHTML;
+}
+async function copyBody(){
+  const html=bodyForCopy();
+  const tmp=document.createElement('div'); tmp.innerHTML=html;
+  const text=tmp.innerText;
+  const missing=document.querySelectorAll('#body a.needs-link').length;
+  try{
+    await navigator.clipboard.write([ new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'})
+    })]);
+    toast(missing ? 'Copied ✓ — set '+missing+' link(s) by hand' : 'Body copied with formatting ✓');
+  }catch(e){
+    const r=document.createRange(); r.selectNodeContents(document.getElementById('body'));
+    const s=window.getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand('copy'); s.removeAllRanges();
+    toast('Body copied ✓');
+  }
+}
+async function downloadImg(url,name){
+  try{
+    const res=await fetch(url,{mode:'cors'}); const blob=await res.blob();
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href);
+    toast('Downloaded ✓');
+  }catch(e){ window.open(url,'_blank'); toast('Opened in new tab — right-click to save'); }
+}
+
+/* ================= BRAND PALETTE GENERATOR =================
+   Blends evenly between the anchor colors to produce a cohesive
+   set of FLAT solid colors — meant to stack as Collection / Space
+   icons down the left nav. Each color downloads as a solid square
+   (Space icon) or 16:9 rectangle (course thumbnail). No gradients. */
+const PRESETS=[
+  ['#00D0AD','#0A6E7C','#092B2E'],   // Mighty teal → deep
+  ['#A3B18A','#588157','#DAA520'],   // sage / olive / gold (Chef Tonight vibe)
+  ['#F4A261','#E76F51','#9C4221'],   // warm terracotta
+  ['#8ECAE6','#219EBC','#023047'],   // ocean
+  ['#CDB4DB','#9D4EDD','#5A189A'],   // berry
+  ['#94A3B8','#475569','#0F172A']    // slate neutrals
+];
+function buildPresets(){ const row=document.getElementById('presetRow'); PRESETS.forEach(p=>{ const d=document.createElement('div'); d.className='preset'; d.style.background=`linear-gradient(90deg, ${p[0]}, ${p[1]}, ${p[2]})`; d.title=p.join(' / '); d.onclick=()=>{ setColor(1,p[0]); setColor(2,p[1]); setColor(3,p[2]); generateImages(); }; row.appendChild(d); }); }
+function setColor(n,hex){ document.getElementById('c'+n).value=hex; document.getElementById('c'+n+'t').value=hex; }
+function syncColor(n,src){ if(src==='picker') document.getElementById('c'+n+'t').value=document.getElementById('c'+n).value; else{ let v=document.getElementById('c'+n+'t').value.trim(); if(/^#?[0-9a-fA-F]{6}$/.test(v)){ if(v[0]!=='#')v='#'+v; document.getElementById('c'+n).value=v; } } generateImages(); }
+function colors(){ return [1,2,3].map(n=>document.getElementById('c'+n).value); }
+
+function hexToRgb(h){ h=h.replace('#',''); return [0,2,4].map(i=>parseInt(h.substr(i,2),16)); }
+function rgbToHex(r){ return '#'+r.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join(''); }
+function buildPalette(anchors,n){
+  if(n<2) n=2;
+  const segs = anchors.length-1;
+  const out=[];
+  for(let i=0;i<n;i++){
+    const p = segs===0 ? 0 : (i/(n-1))*segs;
+    const s = Math.min(Math.floor(p), Math.max(segs-1,0));
+    const t = p - s;
+    const a=hexToRgb(anchors[s]), b=hexToRgb(anchors[Math.min(s+1,anchors.length-1)]);
+    out.push(rgbToHex([0,1,2].map(k=>a[k]+(b[k]-a[k])*t)));
+  }
+  return out;
+}
+let PALETTE=[];
+function solidCanvas(w,h,hex){ const cv=document.createElement('canvas'); cv.width=w; cv.height=h; const x=cv.getContext('2d'); x.fillStyle=hex; x.fillRect(0,0,w,h); return cv; }
+function downloadSolid(hex,w,h,name){ solidCanvas(w,h,hex).toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; a.click(); URL.revokeObjectURL(a.href); toast('Downloaded ✓'); }); }
+function downloadAll(shape){ const [w,h]= shape==='square'?[500,500]:[1920,1080]; PALETTE.forEach((c,i)=>setTimeout(()=>downloadSolid(c,w,h,`color-${i+1}-${shape}.png`), i*300)); toast('Downloading '+PALETTE.length+' files…'); }
+function swatchCard(hex,i){
+  const card=document.createElement('div'); card.className='swatch-card';
+  const chip=document.createElement('div'); chip.className='swatch-chip'; chip.style.background=hex; card.appendChild(chip);
+  const body=document.createElement('div'); body.className='swatch-body';
+  const hx=document.createElement('div'); hx.className='swatch-hex'; hx.textContent=hex.toUpperCase(); body.appendChild(hx);
+  const btns=document.createElement('div'); btns.className='swatch-btns';
+  const sq=document.createElement('button'); sq.className='btn btn-ghost btn-sm'; sq.textContent='⬇ Square'; sq.onclick=()=>downloadSolid(hex,500,500,`color-${i+1}-square.png`);
+  const wd=document.createElement('button'); wd.className='btn btn-ghost btn-sm'; wd.textContent='⬇ Wide'; wd.onclick=()=>downloadSolid(hex,1920,1080,`color-${i+1}-wide.png`);
+  btns.appendChild(sq); btns.appendChild(wd); body.appendChild(btns); card.appendChild(body);
+  return card;
+}
+function generateImages(){
+  const n=Math.max(2,Math.min(12, parseInt(document.getElementById('numColors').value)||6));
+  PALETTE = buildPalette(colors(), n);
+  const strip=document.getElementById('paletteStrip'); strip.innerHTML='';
+  PALETTE.forEach(c=>{ const d=document.createElement('div'); d.className='cell'; d.style.background=c; strip.appendChild(d); });
+  const grid=document.getElementById('swatchGrid'); grid.innerHTML='';
+  PALETTE.forEach((c,i)=>grid.appendChild(swatchCard(c,i)));
+}
+
+/* ---------------- init ---------------- */
+buildArtList();
+render();
+buildPresets();
+generateImages();
+</script>
+</body>
+</html>
